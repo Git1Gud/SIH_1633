@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useId } from "react";
 import { useNavigate } from "react-router-dom";
+
 const donate3 = ["Cause", "Cause", "Cause"];
 const friend3 = [
   {
@@ -48,21 +49,24 @@ const Posts = [
       "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vitae et fugiat neque accusantium deleniti a exercitationem rem explicabo quo ad amet, magnam ullam. Iure ratione odit enim voluptatibus, odio amet necessitatibus error, saepe repellat fugiat accusamus! In reiciendis iure quae, unde, officia cum aliquam sed deleniti id explicabo alias? Velit.",
   },
 ];
+
 function Home() {
   const navigate = useNavigate();
+
   return (
-    <div className="w-full h-full flex">
-      <div className="w-[65%] h-full flex flex-col p-8">
+    <div className="flex flex-col 2xl:flex-row w-full">
+      {/* Main Content */}
+      <div className="2xl:w-[65%] w-full h-full flex flex-col p-4 md:p-8">
         {Posts.map((p) => (
-          <div className="bg-primary rounded-lg text-gray-200 p-4 mb-4 flex">
-            <div className="w-1/3">
+          <div key={useId()} className="bg-primary rounded-lg text-gray-200 p-4 mb-4 flex flex-col md:flex-row">
+            <div className="w-full md:w-1/3">
               <img
                 src={p.img}
                 alt=""
-                className="bg-cover h-[200px] rounded-lg"
+                className="bg-cover h-[200px] rounded-lg w-full object-cover"
               />
             </div>
-            <div className="w-2/3 flex flex-col px-4">
+            <div className="w-full md:w-2/3 flex flex-col px-4 mt-4 md:mt-0">
               <h1 className="text-gray-400 text-[10px]">{p.date}</h1>
               <p className="my-3 text-xl font-semibold">{p.title}</p>
               <div className="text-gray-400">
@@ -71,7 +75,7 @@ function Home() {
                   : p.content}
               </div>
               <hr className="my-2 border-gray-500" />
-              <div className="flex items-center justify-start gap-4">
+              <div className="flex items-center gap-4">
                 <img
                   src={p.profileImg}
                   alt=""
@@ -83,8 +87,11 @@ function Home() {
           </div>
         ))}
       </div>
-      <div className="w-[35%] h-full p-8 flex flex-col">
-        <div className="w-full  bg-primary rounded-lg p-4 text-gray-400">
+
+      {/* Sidebar */}
+      <div className="2xl:w-[35%] w-full p-4 md:p-8 flex flex-col">
+        {/* Donations Section */}
+        <div className="bg-primary rounded-lg p-4 text-gray-400 mb-4">
           <div className="flex justify-between items-center text-gray-200">
             Donations
             <button
@@ -96,8 +103,8 @@ function Home() {
               See More
             </button>
           </div>
-          {donate3.map((cause) => (
-            <div className="mt-4 bg-back p-4 text-gray-400 rounded-lg flex justify-between items-center text-clip">
+          {donate3.map((cause, index) => (
+            <div key={index} className="mt-4 bg-back p-4 text-gray-400 rounded-lg flex justify-between items-center">
               <span className="overflow-hidden whitespace-nowrap text-ellipsis">
                 {cause}
               </span>
@@ -105,7 +112,9 @@ function Home() {
             </div>
           ))}
         </div>
-        <div className="mt-4 bg-primary text-gray-200 rounded-lg p-4">
+
+        {/* Alumni Suggestions Section */}
+        <div className="bg-primary text-gray-200 rounded-lg p-4">
           <div className="flex justify-between">
             Alumni Suggestions
             <button
@@ -117,11 +126,13 @@ function Home() {
               See More
             </button>
           </div>
-          {friend3.map((f) => (
-            <div className="mt-4 bg-back px-4 py-2 text-gray-400 rounded-lg flex justify-between items-center">
-              <div className="flex justify-center items-center gap-2">
-                <img src={f.img} alt="" className="w-[40px] rounded-lg" />
+          {friend3.map((f, index) => (
+            <div key={index} className="mt-4 bg-back px-4 py-2 text-gray-400 rounded-lg flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <img src={f.img} alt="" className="w-[30px] rounded-lg" />
+                <span className="overflow-hidden whitespace-nowrap text-ellipsis">
                 {f.name}
+              </span>
               </div>
               <button className="bg-primary rounded-lg p-2">Add</button>
             </div>

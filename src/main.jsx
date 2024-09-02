@@ -3,9 +3,7 @@ import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Home from './components/Home.jsx'
-import DashBoard from './components/DashBoard.jsx'
-import NotFound404 from './components/NotFound404.jsx'
+import {Posts,Home,DashBoard,Donations,Settings,Alumnis, Profile,NotFound404} from './components/index.js'
 
 const router = createBrowserRouter([
   {
@@ -18,19 +16,19 @@ const router = createBrowserRouter([
         element: <Home />
       },{
         path: '/Posts',
-        element: <Home /> //change
+        element: <Posts /> //change
       },{
         path: '/Donation',
-        element: <Home /> //change
+        element: <Donations /> //change
       },{
         path: '/Alumnis',
-        element: <Home /> //change
+        element: <Alumnis /> //change
       },{
         path: '/Settings',
-        element: <Home /> //change
+        element: <Settings /> //change
       },{
         path:'/Profile/:username',
-        element: <Home/>
+        element: <Profile/>
       }
     ]
   }

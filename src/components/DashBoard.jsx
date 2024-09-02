@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 
 const profileImgUrl =
@@ -7,7 +7,7 @@ const profileImgUrl =
 const username = "aryan";
 
 function DashBoard() {
-  const [Search, setSearch] = useState("");
+  const [search, setSearch] = useState("");
   const ref = useRef(null);
   const navigate = useNavigate();
 
@@ -34,40 +34,78 @@ function DashBoard() {
       </div>
     </NavLink>
   );
+
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    console.log(ref.current);
-
     if (ref.current && ref.current.value) {
       navigate(`/Profile/${ref.current.value}`);
     }
   };
 
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [toggle, setToggle] = useState(true);
+  const [style, setStyle] = useState("");
+  const [mainStyle,setMainStyle] = useState('hidden')
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
-    <div className="w-full h-screen flex">
+    <div className="flex flex-col md:flex-row w-full h-screen">
       {/* Sidebar */}
-      <div className="h-full w-1/5 bg-primary flex flex-col items-center text-white">
-        <div className="w-[80%] h-full relative">
+        {windowWidth < 1400 ? (
+          <button
+            onClick={() => {
+              setToggle(!toggle);
+              if(toggle){
+                setStyle('hidden')
+                setMainStyle('')
+              }else{
+                setStyle('')
+                setMainStyle('hidden')
+              }
+            }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="48px"
+              viewBox="0 -960 960 960"
+              width="30px"
+              fill="#e8eaed"
+              className={`${toggle? 'rotate-270': 'rotate-180'} transition-all ease-in-out`}
+            >
+              <path d="M480-360 280-559h400L480-360Z" />
+            </svg>
+          </button>
+        ) : (
+          <></>
+        )}
+      <div className={`w-full md:w-1/3 2xl:w-1/5 h-full bg-primary flex flex-col text-white p-4 transition-all duration-300 ease-in-out ${style}`}>
+
+        <div className="flex flex-col flex-grow">
           {/* Profile Section */}
           <NavLink to={`/Profile/${username}`}>
-            <div className="bg-back mt-5 mb-12 p-2 w-full rounded-lg">
-              <div className="w-[100%] flex items-center justify-start">
-                <img
-                  src={profileImgUrl}
-                  alt="Profile"
-                  className="w-[30%] h-16 object-cover rounded-lg"
-                />
-                <p className="text-sm font-Montserrat text-gray-400 mx-4">
-                  Aryan Kanyawar
-                </p>
-              </div>
+            <div className="bg-back mt-5 mb-12 p-2 w-full rounded-lg flex items-center">
+              <img
+                src={profileImgUrl}
+                alt="Profile"
+                className="w-16 h-16 object-cover rounded-lg"
+              />
+              <p className="text-sm font-Montserrat text-gray-400 mx-4">
+                Aryan Kanyawar
+              </p>
             </div>
           </NavLink>
 
           <p className="text-xs my-5 font-Montserrat">MENU</p>
 
           {/* Menu Items */}
-          <div className="flex flex-col font-Montserrat">
+          <div className="flex flex-col font-Montserrat w-full">
             <SidebarLink
               to="/"
               iconPath="M264-216h96v-240h240v240h96v-348L480-726 264-564v348Zm-72 72v-456l288-216 288 216v456H528v-240h-96v240H192Zm288-327Z"
@@ -85,7 +123,7 @@ function DashBoard() {
             />
             <SidebarLink
               to="/Alumnis"
-              iconPath="M96-192v-92q0-25.78 12.5-47.39T143-366q54-32 114.5-49T384-432q66 0 126.5 17T625-366q22 13 34.5 34.61T672-284v92H96Zm648 0v-92q0-42-19.5-78T672-421q39 8 75.5 21.5T817-366q22 13 34.5 34.67Q864-309.65 864-284v92H744ZM384-480q-60 0-102-42t-42-102q0-60 42-102t102-42q60 0 102 42t42 102q0 60-42 102t-102 42Zm336-144q0 60-42 102t-102 42q-8 0-15-.5t-15-2.5q25-29 39.5-64.5T600-624q0-41-14.5-76.5T546-765q8-2 15-2.5t15-.5q60 0 102 42t42 102ZM168-264h432v-20q0-6.47-3.03-11.76-3.02-5.3-7.97-8.24-47-27-99-41.5T384-360q-54 0-106 14t-99 42q-4.95 2.83-7.98 7.91-3.02 5.09-3.02 12V-264Zm216.21-288Q414-552 435-573.21t21-51Q456-654 434.79-675t-51-21Q354-696 333-674.79t-21 51Q312-594 333.21-573t51 21ZM384-264Zm0-360Z"
+              iconPath="M96-192v-92q0-25.78 12.5-47.39T143-366q54-32 114.5-49T384-432q66 0 126.5 17T625-366q22 13 34.5 34.61T672-284v92H96Zm648 0v-92q0-42-19.5-78T672-421q39 8 75.5 21.5T817-366q22 13 34.5 34.67Q864-309.65 864-284v92H744ZM384-480q-60 0-102-42t-42-102q0-60 42-102t102-42q60 0 102 42t42 102q0 60-42 102t-102 42Zm0-144Z"
               label="Alumnis"
             />
             <SidebarLink
@@ -94,10 +132,12 @@ function DashBoard() {
               label="Settings"
             />
           </div>
+        </div>
 
-          {/* Logout Button */}
+        {/* Logout Button */}
+        <div className="mt-auto">
           <NavLink to={`/Profile/${username}`}>
-            <button className="absolute text-gray-400 bottom-12 bg-back flex p-4 items-center justify-between rounded-lg w-full h-[60px]">
+            <button className="text-gray-400 bg-back flex p-4 items-center justify-between rounded-lg w-full h-[60px]">
               <p>Logout</p>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -114,22 +154,25 @@ function DashBoard() {
       </div>
 
       {/* Main Content */}
-      <div className="w-4/5 h-screen overflow-y-auto no-scrollbar">
-        <div className="w-full h-20 py-8 flex items-start justify-between">
-          <div className="mx-10 bg-primary w-[300px] h-[45px] rounded-md pr-4">
+      <div
+        className={`
+          md:w-4/5 w-full
+        h-screen overflow-y-auto no-scrollbar transition-all duration-300 ease-in-out ${windowWidth<760? mainStyle:''}`}
+      >
+        <div className="w-full h-20 p-8 flex items-start ">
+          <div className="mx-4 md:mx-10 bg-primary md:w-[300px] w-full h-[45px] rounded-md p-4">
             <form
-              action=""
               className="flex justify-between items-center w-full h-full"
               onSubmit={handleSearchSubmit}
             >
               <input
                 id="Search"
                 type="text"
-                value={Search}
+                value={search}
                 placeholder="Search"
                 onChange={(e) => setSearch(e.target.value)}
                 ref={ref}
-                className="bg-primary h-full w-[200px] text-gray-300 rounded-md p-4"
+                className="bg-primary h-full w-full text-gray-300 rounded-md p-4"
               />
               <label htmlFor="Search" className="cursor-pointer">
                 <svg
@@ -144,20 +187,36 @@ function DashBoard() {
               </label>
             </form>
           </div>
-          <div className="flex w-[300px] h-[45px] gap-2">
-            <button onClick={()=>navigate()}>
+          <div className="flex md:w-[300px] w-full h-[45px] gap-2">
+            <button onClick={() => navigate("/")}>
               <div className="bg-primary flex justify-center items-center p-3 rounded-lg">
-              <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#e8eaed"><path d="M240-384h336v-72H240v72Zm0-132h480v-72H240v72Zm0-132h480v-72H240v72ZM96-96v-696q0-29.7 21.15-50.85Q138.3-864 168-864h624q29.7 0 50.85 21.15Q864-821.7 864-792v480q0 29.7-21.15 50.85Q821.7-240 792-240H240L96-96Zm114-216h582v-480H168v522l42-42Zm-42 0v-480 480Z"/></svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="20px"
+                  viewBox="0 -960 960 960"
+                  width="20px"
+                  fill="#e8eaed"
+                >
+                  <path d="M240-384h336v-72H240v72Zm0-132h480v-72H240v72Zm0-132h480v-72H240v72ZM96-96v-696q0-29.7 21.15-50.85Q138.3-864 168-864h624q29.7 0 50.85 21.15Q864-821.7 864-792v480q0 29.7-21.15 50.85Q821.7-240 792-240H240L96-96Zm114-216h582v-480H168v522l42-42Zm-42 0v-480 480Z" />
+                </svg>
               </div>
             </button>
-            <button onClick={()=>navigate()}>
+            <button onClick={() => navigate("/")}>
               <div className="bg-primary flex justify-center items-center p-3 rounded-lg">
-              <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#e8eaed"><path d="M192-216v-72h48v-240q0-87 53.5-153T432-763v-53q0-20 14-34t34-14q20 0 34 14t14 34v53q85 16 138.5 82T720-528v240h48v72H192Zm288-276Zm-.21 396Q450-96 429-117.15T408-168h144q0 30-21.21 51t-51 21ZM312-288h336v-240q0-70-49-119t-119-49q-70 0-119 49t-49 119v240Z"/></svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="20px"
+                  viewBox="0 -960 960 960"
+                  width="20px"
+                  fill="#e8eaed"
+                >
+                  <path d="M192-216v-72h48v-240q0-87 53.5-153T432-763v-53q0-20 14-34t34-14q20 0 34 14t14 34v53q85 16 138.5 82T720-528v240h48v72H192Zm288-276Zm-.21 396Q450-96 429-117.15T408-168h144q0 30-21.21 51t-51 21ZM312-288h336v-240q0-70-49-119t-119-49q-70 0-119 49t-49 119v240Z" />
+                </svg>
               </div>
             </button>
-            <button onClick={()=>navigate('/Settings')}>
+            <button onClick={() => navigate("/Settings")}>
               <div className="bg-primary flex justify-center items-center p-3 rounded-lg">
-              <svg
+                <svg
                   xmlns="http://www.w3.org/2000/svg"
                   height="20px"
                   viewBox="0 -960 960 960"
@@ -170,7 +229,9 @@ function DashBoard() {
             </button>
           </div>
         </div>
-        <div className="w-full h-full ">
+
+        {/* Outlet for nested routes */}
+        <div className="p-8">
           <Outlet />
         </div>
       </div>
